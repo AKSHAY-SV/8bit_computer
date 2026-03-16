@@ -1,0 +1,36 @@
+`timescale 1ns / 1ps
+
+module regfile(
+    input clk,
+    input write_enable,
+    input [2:0] write_reg,
+    input [2:0] read_reg1,
+    input [2:0] read_reg2,
+    input [7:0] write_data,
+    output [7:0] read_data1,
+    output [7:0] read_data2
+);
+
+// 8 registers each 8-bit wide
+reg [7:0] regfile [7:0];
+
+integer i;
+
+// Initialize registers to 0 to avoid XX in simulation
+initial begin
+    for(i = 0; i < 8; i = i + 1)
+        regfile[i] = 8'b00000000;
+end
+
+// Write operation (synchronous)
+always @(posedge clk)
+begin
+    if(write_enable)
+        regfile[write_reg] <= write_data;
+end
+
+// Read operations (combinational)
+assign read_data1 = regfile[read_reg1];
+assign read_data2 = regfile[read_reg2];
+
+endmodule
